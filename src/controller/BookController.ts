@@ -7,58 +7,36 @@ const database = require("../../src/config/database");
 class BookController {
   async getAll(req: Request, res: Response) {
     try {
-      //   const { sortParam, sortOrder, search, name, author, price, priceFil, stock, stockFil, page, limit } = req.query;
-      //   if (page < 1 || limit < 0) {
-      //     return res.status(HTTP_STATUS.UNPROCESSABLE_ENTITY).send(failure("Page and limit values must be at least 1"));
-      //   }
-      //   if (
-      //     (sortOrder && !sortParam) ||
-      //     (!sortOrder && sortParam) ||
-      //     (sortParam && sortParam !== "stock" && sortParam !== "price" && sortParam !== "name") ||
-      //     (sortOrder && sortOrder !== "asc" && sortOrder !== "desc")
-      //   ) {
-      //     return res.status(HTTP_STATUS.UNPROCESSABLE_ENTITY).send(failure("Invalid sort parameters provided"));
-      //   }
-      //   const filter = {};
+      const page = parseInt(req.query.page as string, 10);
+      const pageSize = parseInt(req.query.pageSize as string, 10);
+      const search = req.query.search as string;
+      const author = req.query.author as string;
+      if (page < 1 || pageSize < 0) {
+        return res
+          .status(HTTP_STATUS.UNPROCESSABLE_ENTITY)
+          .send(failure("Page and limit values must be at least 1"));
+      }
+      const offset = (page - 1) * pageSize;
+      const limit = pageSize;
 
-      //   if (price && priceFil) {
-      //     if (priceFil === "low") {
-      //       filter.price = { $lte: parseFloat(price) };
-      //     } else {
-      //       filter.price = { $gte: parseFloat(price) };
-      //     }
-      //   }
-      //   if (stock && stockFil) {
-      //     if (stockFil === "low") {
-      //       filter.stock = { $lte: parseFloat(stock) };
-      //     } else {
-      //       filter.stock = { $gte: parseFloat(stock) };
-      //     }
-      //   }
+      let query = database("books").select("*").limit(limit).offset(offset);
 
-      //   if (name) {
-      //     filter.name = { $regex: name, $options: "i" };
-      //   }
-      //   if (author) {
-      //     filter.author = { $in: author.toLowerCase() };
-      //   }
-      //   if (search) {
-      //     filter["$or"] = [{ name: { $regex: search, $options: "i" } }, { author: { $regex: search, $options: "i" } }];
-      //   }
-      //   console.log(filter.$or);
-      // console.log(typeof Object.keys(JSON.parse(JSON.stringify(filter)))[0]);
-      //   const bookCount = await ProductModel.find({}).count();
-      const books = await database("books");
-      // .sort({
-      //   [sortParam]: sortOrder === "asc" ? 1 : -1,
-      // })
-      // .skip((page - 1) * limit)
-      // .limit(limit ? limit : 10);
+      if (search) {
+        query = query.where("title", "like", `%${search}%`);
+      }
+
+      if (author) {
+        query = query.where({ author_id: author });
+      }
+
+      const books = await query;
+      const totalBooksQuery = database("books").count("* as count").first();
+      const totalBooks = await totalBooksQuery;
+
       // console.log(products)
       if (books.length === 0) {
         return res.status(HTTP_STATUS.OK).send(
           success("No books were found", {
-            // total: bookCount,
             totalPages: null,
             count: 0,
             page: 0,
@@ -68,16 +46,14 @@ class BookController {
         );
       }
 
-      console.log(books);
-
       return res.status(HTTP_STATUS.OK).send(
-        success("Successfully got all products", {
-          //   total: bookCount,
-          //   totalPages: limit ? Math.ceil(productCount / limit) : null,
+        success("Successfully got all books", {
+          books,
+          totalBooks,
+          totalPages: pageSize ? Math.ceil(totalBooks.count / pageSize) : null,
           count: books.length,
-          //   page: parseInt(page),
-          //   limit: parseInt(limit),
-          authors: books,
+          page: page,
+          limit: limit,
         })
       );
     } catch (error) {
