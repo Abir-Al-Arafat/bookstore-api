@@ -1,31 +1,24 @@
 import express from "express";
 const routes = express();
 const AuthorController = require("../controller/AuthorController");
-// const { productValidator } = require("../middleware/validation");
-
-// const createValidation = require("../middleware/validation");
-// const createValidationPartial = require("../middleware/validationPartial");
+const {
+  authorValidator,
+  commonValidator,
+} = require("../middleware/validation");
 
 // const { isAuthorized } = require("../middleware/authValidationJWT");
 
-// routes.get("/getall", ProductController.getAllProducts);
-
-// requirement
 // gets all data
 routes.get("/", AuthorController.getAll);
 
 // get one data
-routes.get(
-  "/:id",
-  // productValidator.delete,
-  AuthorController.getOne
-);
+routes.get("/:id", commonValidator.primaryKeyId, AuthorController.getOne);
 
 // deletes
 routes.delete(
   "/:id",
   //   isAuthorized,
-  //   productValidator.delete,
+  commonValidator.primaryKeyId,
   AuthorController.delete
 );
 
@@ -33,23 +26,11 @@ routes.delete(
 routes.post(
   "/",
   //   isAuthorized,
-  //   productValidator.create,
+  authorValidator.create,
   AuthorController.add
 );
 
-// partial update
-// routes.patch(
-//   "/:id",
-//   isAuthorized,
-//   productValidator.update,
-//   ProductController.update
-// );
-
 // update
-routes.put(
-  "/:id",
-  // createValidation,
-  AuthorController.update
-);
+routes.put("/:id", authorValidator.create, AuthorController.update);
 
 module.exports = routes;

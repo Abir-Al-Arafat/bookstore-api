@@ -1,27 +1,21 @@
-// const express = require("express");
 import express from "express";
 const routes = express();
 const BookController = require("../controller/BookController");
-const { productValidator } = require("../middleware/validation");
-
-// const createValidation = require("../middleware/validation");
-// const createValidationPartial = require("../middleware/validationPartial");
+const { bookValidator, commonValidator } = require("../middleware/validation");
 
 // const { isAuthorized } = require("../middleware/authValidationJWT");
-
-// routes.get("/getall", ProductController.getAllProducts);
 
 // gets all data
 routes.get("/", BookController.getAll);
 
 // get one data
-// routes.get("/:id", productValidator.delete, BookController.getOne);
+routes.get("/:id", commonValidator.primaryKeyId, BookController.getOne);
 
 // deletes
 routes.delete(
   "/:id",
   //   isAuthorized,
-  //   productValidator.delete,
+  commonValidator.primaryKeyId,
   BookController.delete
 );
 
@@ -29,22 +23,23 @@ routes.delete(
 routes.post(
   "/",
   //   isAuthorized,
-  //   productValidator.create,
+  bookValidator.create,
   BookController.add
 );
 
 // partial update
 // routes.patch(
 //   "/:id",
-// //   isAuthorized,
-// //   productValidator.update,
-//   ProductController.update
+//   isAuthorized,
+//   commonValidator.primaryKeyId,
+//   BookController.update
 // );
 
 // update
 routes.put(
   "/:id",
-  // createValidation,
+  commonValidator.primaryKeyId,
+  bookValidator.create,
   BookController.update
 );
 

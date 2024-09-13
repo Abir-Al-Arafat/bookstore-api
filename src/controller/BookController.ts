@@ -67,11 +67,13 @@ class BookController {
   // gets only one product
   async getOne(req: Request, res: Response) {
     try {
-      // const validation = validationResult(req).array();
-      // // console.log(validation);
-      // if (validation.length > 0) {
-      //   return res.status(HTTP_STATUS.NOT_FOUND).send(failure("Failed to get the product", validation[0].msg));
-      // }
+      const validation = validationResult(req).array();
+      // console.log(validation);
+      if (validation.length > 0) {
+        return res
+          .status(HTTP_STATUS.NOT_FOUND)
+          .send(failure("Failed to get the product", validation[0].msg));
+      }
 
       const { id } = req.params;
 
@@ -97,13 +99,13 @@ class BookController {
   // adds
   async add(req: Request, res: Response) {
     try {
-      // const validation = validationResult(req).array();
-      // // console.log(validation);
-      // if (validation.length > 0) {
-      //     return res
-      //         .status(HTTP_STATUS.OK)
-      //         .send(failure("Failed to add product", validation[0].msg));
-      // }
+      const validation = validationResult(req).array();
+      // console.log(validation);
+      if (validation.length > 0) {
+        return res
+          .status(HTTP_STATUS.OK)
+          .send(failure("Failed to add product", validation[0].msg));
+      }
       const { title, description, published_date, author_id } = req.body;
 
       // Check if the author exists
@@ -137,13 +139,13 @@ class BookController {
   // deletes a product
   async delete(req: Request, res: Response) {
     try {
-      // const validation = validationResult(req).array();
-      // // console.log(validation);
-      // if (validation.length > 0) {
-      //     return res
-      //         .status(HTTP_STATUS.OK)
-      //         .send(failure("Failed to delete product", validation[0].msg));
-      // }
+      const validation = validationResult(req).array();
+      // console.log(validation);
+      if (validation.length > 0) {
+        return res
+          .status(HTTP_STATUS.OK)
+          .send(failure("Failed to delete book", validation[0].msg));
+      }
       const id = req.params.id;
       // Find the item by ID and delete it
       const deletedBook = await database("books").where({ id }).del();
@@ -168,16 +170,15 @@ class BookController {
   // updates
   async update(req: Request, res: Response) {
     try {
+      const validation = validationResult(req).array();
+
+      if (validation.length > 0) {
+        return res
+          .status(HTTP_STATUS.OK)
+          .send(failure("Failed to update data", validation[0].msg));
+      }
       const { id } = req.params;
       const { title, description, published_date, author_id } = req.body;
-
-      // const validation = validationResult(req).array();
-
-      // if (validation.length > 0) {
-      //     return res
-      //         .status(HTTP_STATUS.OK)
-      //         .send(failure("Failed to update data", validation[0].msg));
-      // }
 
       // Check if the author exists
       const author = await database("authors").where({ id: author_id }).first();

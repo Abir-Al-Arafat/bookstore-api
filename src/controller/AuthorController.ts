@@ -66,13 +66,13 @@ class AuthorController {
   // gets only one product
   async getOne(req: Request, res: Response) {
     try {
-      // const validation = validationResult(req).array();
-      // // console.log(validation);
-      // if (validation.length > 0) {
-      //   return res
-      //     .status(HTTP_STATUS.NOT_FOUND)
-      //     .send(failure("Failed to get the product", validation[0].msg));
-      // }
+      const validation = validationResult(req).array();
+      // console.log(validation);
+      if (validation.length > 0) {
+        return res
+          .status(HTTP_STATUS.NOT_FOUND)
+          .send(failure("Failed to get the author", validation[0].msg));
+      }
 
       const { id } = req.params;
 
@@ -95,13 +95,13 @@ class AuthorController {
   // adds
   async add(req: Request, res: Response) {
     try {
-      // const validation = validationResult(req).array();
-      // // console.log(validation);
-      // if (validation.length > 0) {
-      //     return res
-      //         .status(HTTP_STATUS.OK)
-      //         .send(failure("Failed to add product", validation[0].msg));
-      // }
+      const validation = validationResult(req).array();
+      // console.log(validation);
+      if (validation.length > 0) {
+        return res
+          .status(HTTP_STATUS.OK)
+          .send(failure("Failed to add author", validation[0].msg));
+      }
       const { name, bio, birthdate } = req.body;
       const [id] = await database("authors").insert({
         name,
@@ -121,16 +121,16 @@ class AuthorController {
     }
   }
 
-  // deletes a product
+  // deletes an author
   async delete(req: Request, res: Response) {
     try {
-      // const validation = validationResult(req).array();
-      // // console.log(validation);
-      // if (validation.length > 0) {
-      //     return res
-      //         .status(HTTP_STATUS.OK)
-      //         .send(failure("Failed to delete product", validation[0].msg));
-      // }
+      const validation = validationResult(req).array();
+      // console.log(validation);
+      if (validation.length > 0) {
+        return res
+          .status(HTTP_STATUS.OK)
+          .send(failure("Failed to delete author", validation[0].msg));
+      }
       const id = req.params.id;
       // Find the item by ID and delete it
       const deletedAuthor = await database("authors").where({ id }).del();
@@ -159,13 +159,13 @@ class AuthorController {
       const id = req.params.id;
       const { name, bio, birthdate } = req.body;
 
-      // const validation = validationResult(req).array();
+      const validation = validationResult(req).array();
 
-      // if (validation.length > 0) {
-      //     return res
-      //         .status(HTTP_STATUS.OK)
-      //         .send(failure("Failed to update data", validation[0].msg));
-      // }
+      if (validation.length > 0) {
+        return res
+          .status(HTTP_STATUS.OK)
+          .send(failure("Failed to update data", validation[0].msg));
+      }
 
       const updatedAuthor = await await database("authors")
         .where({ id })
