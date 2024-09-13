@@ -1,4 +1,4 @@
-const express = require("express");
+import express from "express";
 const routes = express();
 const AuthorController = require("../controller/AuthorController");
 // const { productValidator } = require("../middleware/validation");
@@ -6,7 +6,7 @@ const AuthorController = require("../controller/AuthorController");
 // const createValidation = require("../middleware/validation");
 // const createValidationPartial = require("../middleware/validationPartial");
 
-const { isAuthorized } = require("../middleware/authValidationJWT");
+// const { isAuthorized } = require("../middleware/authValidationJWT");
 
 // routes.get("/getall", ProductController.getAllProducts);
 

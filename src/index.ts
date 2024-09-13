@@ -4,7 +4,7 @@ const express = require("express");
 // const cors = require("cors");
 const dotenv = require("dotenv");
 
-// const BookRouter = require("./routes/BookRoutes");
+const BookRouter = require("./routes/BookRoutes");
 const AuthorRouter = require("./routes/AuthorRoutes");
 
 const app = express();
@@ -35,7 +35,7 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 
 const bookPrefix: string = "/books";
 const authorPrefix: string = "/authors";
-// app.use(`${bookPrefix}/`, BookRouter);
+app.use(`${bookPrefix}`, BookRouter);
 app.use(`${authorPrefix}`, AuthorRouter);
 
 const PORT = 3000;
