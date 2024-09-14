@@ -1,0 +1,630 @@
+{
+	"info": {
+		"_postman_id": "b58613dc-2bf4-403a-9049-0488774b80d4",
+		"name": "bookstore",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29485617"
+	},
+	"item": [
+		{
+			"name": "books",
+			"item": [
+				{
+					"name": "Get all books",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Wolf of wall street\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:3000/books?search=title&page=1&pageSize=4",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"books"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "title"
+								},
+								{
+									"key": "author",
+									"value": "tite",
+									"disabled": true
+								},
+								{
+									"key": "sortParam",
+									"value": "price",
+									"disabled": true
+								},
+								{
+									"key": "sortOrder",
+									"value": "desc",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "4"
+								}
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				},
+				{
+					"name": "Get one data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1:3000/books/2",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"books",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add a book",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTA5NGY2ODE1MzRmNzZjYjRhZGNiZmYiLCJlbWFpbCI6ImFiaXJAZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmEkMTAkY2xZb2w4d2hmbXFiei5rQjJpcG8wdTBDVEYuZWZDalFINS5kdXRKLnRCMWhYTWVjZEptaUciLCJyb2xlIjoidXNlciIsInZlcmlmaWVkIjpmYWxzZSwid3JvbmdBdHRlbXB0cyI6MCwiaXNMb2NrZWQiOmZhbHNlLCJsb2NrZWRUaWxsIjpudWxsLCJ1c2VyIjoiNjUwOTRmNjgxNTM0Zjc2Y2I0YWRjYmZkIiwiY3JlYXRlZEF0IjoiMjAyMy0wOS0xOVQwNzozNjowOC44MThaIiwidXBkYXRlZEF0IjoiMjAyMy0wOS0xOVQwNzozNjowOC44MThaIiwiX192IjowLCJpYXQiOjE2OTUyMDAzMzAsImV4cCI6MTY5NTIwMTUzMH0.kQrZ2CP-qoYLEp0WVhiuU1zcCMZGZRJP-VwAzzXw1A4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"a new book\",\n  \"description\": \"A novel written by American author F. Scott Fitzgerald.\",\n  \"published_date\": \"1925-04-10\",\n  \"author_id\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:3000/books",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"books"
+							]
+						},
+						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a book",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful DELETE request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 202, 204]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTA1NmRjOTBlZmYxZDUzNjg2NDZjZWYiLCJlbWFpbCI6ImpvbmFkbWluQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJhJDEwJHFVUmdnaFYxLkpJd1llaVdaTGM5b3VVNjBLeTJpc1p1U1JmSzBEMkIxMzlib0hiSGltSHFTIiwicm9sZSI6ImFkbWluIiwidmVyaWZpZWQiOmZhbHNlLCJ3cm9uZ0F0dGVtcHRzIjowLCJpc0xvY2tlZCI6ZmFsc2UsImxvY2tlZFRpbGwiOm51bGwsInVzZXIiOiI2NTA1NmRjOTBlZmYxZDUzNjg2NDZjZWQiLCJjcmVhdGVkQXQiOiIyMDIzLTA5LTE2VDA4OjU2OjQxLjc5OFoiLCJ1cGRhdGVkQXQiOiIyMDIzLTA5LTE2VDA4OjU2OjQxLjc5OFoiLCJfX3YiOjAsImlhdCI6MTY5NTEwMDIwMCwiZXhwIjoxNjk1MTAwMjYwfQ.QklELx5uHyobWETlSTADP1LF5Sm6m8EwztnQKzdMt-8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:3000/books/2",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"books",
+								"2"
+							]
+						},
+						"description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code."
+					},
+					"response": []
+				},
+				{
+					"name": "Update a book",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful PUT request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Eleven Piece\",\n    \"price\": \"99\",\n    \"stock\": \"12\",\n    \"author\": \"randy orton\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:3000/products/64f2c5f83a6e7e2b6198e8cd",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"products",
+								"64f2c5f83a6e7e2b6198e8cd"
+							]
+						},
+						"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "author",
+			"item": [
+				{
+					"name": "Get all authors",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Wolf of wall street\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:3000/authors",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"authors"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "bleach",
+									"disabled": true
+								},
+								{
+									"key": "author",
+									"value": "tite",
+									"disabled": true
+								},
+								{
+									"key": "sortParam",
+									"value": "price",
+									"disabled": true
+								},
+								{
+									"key": "sortOrder",
+									"value": "desc",
+									"disabled": true
+								},
+								{
+									"key": "price",
+									"value": "100",
+									"disabled": true
+								},
+								{
+									"key": "priceFil",
+									"value": "low",
+									"disabled": true
+								}
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				},
+				{
+					"name": "Get one author",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1:3000/products/6503d13aa62161845a8acf1e",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"products",
+								"6503d13aa62161845a8acf1e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add one author",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTA5NGY2ODE1MzRmNzZjYjRhZGNiZmYiLCJlbWFpbCI6ImFiaXJAZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmEkMTAkY2xZb2w4d2hmbXFiei5rQjJpcG8wdTBDVEYuZWZDalFINS5kdXRKLnRCMWhYTWVjZEptaUciLCJyb2xlIjoidXNlciIsInZlcmlmaWVkIjpmYWxzZSwid3JvbmdBdHRlbXB0cyI6MCwiaXNMb2NrZWQiOmZhbHNlLCJsb2NrZWRUaWxsIjpudWxsLCJ1c2VyIjoiNjUwOTRmNjgxNTM0Zjc2Y2I0YWRjYmZkIiwiY3JlYXRlZEF0IjoiMjAyMy0wOS0xOVQwNzozNjowOC44MThaIiwidXBkYXRlZEF0IjoiMjAyMy0wOS0xOVQwNzozNjowOC44MThaIiwiX192IjowLCJpYXQiOjE2OTUyMDAzMzAsImV4cCI6MTY5NTIwMTUzMH0.kQrZ2CP-qoYLEp0WVhiuU1zcCMZGZRJP-VwAzzXw1A4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"name\": \"A new author\", \n    \"bio\": \"A new author\", \n    \"birthdate\": \"1965-07-31\" \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:3000/authors/",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"authors",
+								""
+							]
+						},
+						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete one author",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful DELETE request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 202, 204]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTA1NmRjOTBlZmYxZDUzNjg2NDZjZWYiLCJlbWFpbCI6ImpvbmFkbWluQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJhJDEwJHFVUmdnaFYxLkpJd1llaVdaTGM5b3VVNjBLeTJpc1p1U1JmSzBEMkIxMzlib0hiSGltSHFTIiwicm9sZSI6ImFkbWluIiwidmVyaWZpZWQiOmZhbHNlLCJ3cm9uZ0F0dGVtcHRzIjowLCJpc0xvY2tlZCI6ZmFsc2UsImxvY2tlZFRpbGwiOm51bGwsInVzZXIiOiI2NTA1NmRjOTBlZmYxZDUzNjg2NDZjZWQiLCJjcmVhdGVkQXQiOiIyMDIzLTA5LTE2VDA4OjU2OjQxLjc5OFoiLCJ1cGRhdGVkQXQiOiIyMDIzLTA5LTE2VDA4OjU2OjQxLjc5OFoiLCJfX3YiOjAsImlhdCI6MTY5NTEwMDIwMCwiZXhwIjoxNjk1MTAwMjYwfQ.QklELx5uHyobWETlSTADP1LF5Sm6m8EwztnQKzdMt-8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:3000/authors/",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"authors",
+								""
+							]
+						},
+						"description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code."
+					},
+					"response": []
+				},
+				{
+					"name": "Update one author",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful PUT request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"name\": \"updated\", \n    \"bio\": \"updated\", \n    \"birthdate\": \"1965-07-31\" \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:3000/authors/8",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"authors",
+								"8"
+							]
+						},
+						"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"arafat\",\r\n    \"email\": \"arafat@gmail.com\",\r\n    \"password\": \"Pass@1234\",\r\n    \"passwordConfirm\": \"Pass@1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:3000/users/auth/signup",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"arafat@gmail.com\",\r\n    \"password\": \"Pass@1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:3000/users/auth/login",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
