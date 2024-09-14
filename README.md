@@ -24,6 +24,7 @@ npm install
 <li>Navigate to the .env file to set the database name, user and password, set jwt secret and expiry time </li>
 
 <li>Navigate to the migration folder and run the migrations using: </li>
+
 ```bash
 npx knex migrate:latest --knexfile ../src/config/knexfile.js
 ```
@@ -36,9 +37,9 @@ npm run dev
 
 </ol>
 
-### <u><b>This is a RESTful API for a Bookstore</b></u>
+# <u><b>This is a RESTful API for a Bookstore</b></u>
 
-# The API allows users to perform CRUD (Create, Read, Update, Delete) operations on books and authors and also includes authentication, authorization, searching, filtering, pagination.
+### The API allows users to perform CRUD (Create, Read, Update, Delete) operations on books and authors and also includes authentication, authorization, searching, filtering, pagination.
 
 ## techonologies used:
 
@@ -81,7 +82,9 @@ npm run dev
 | password | VARCHAR(255) | NOT NULL         |
 
 <p>All routes:</p>
+
 ### Books
+
 ```js
     1.  route: "/books"
         method: "GET",
