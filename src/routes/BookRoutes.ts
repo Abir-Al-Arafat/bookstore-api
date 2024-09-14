@@ -3,7 +3,7 @@ const routes = express();
 const BookController = require("../controller/BookController");
 const { bookValidator, commonValidator } = require("../middleware/validation");
 
-// const { isAuthorized } = require("../middleware/authValidationJWT");
+const { isAuthorizedUser } = require("../middleware/authValidationJWT");
 
 // gets all data
 routes.get("/", BookController.getAll);
@@ -14,18 +14,13 @@ routes.get("/:id", commonValidator.primaryKeyId, BookController.getOne);
 // deletes
 routes.delete(
   "/:id",
-  //   isAuthorized,
+  isAuthorizedUser,
   commonValidator.primaryKeyId,
   BookController.delete
 );
 
 // add
-routes.post(
-  "/",
-  //   isAuthorized,
-  bookValidator.create,
-  BookController.add
-);
+routes.post("/", isAuthorizedUser, bookValidator.create, BookController.add);
 
 // partial update
 // routes.patch(
@@ -38,6 +33,7 @@ routes.post(
 // update
 routes.put(
   "/:id",
+  isAuthorizedUser,
   commonValidator.primaryKeyId,
   bookValidator.create,
   BookController.update

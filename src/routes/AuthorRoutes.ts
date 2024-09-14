@@ -6,7 +6,7 @@ const {
   commonValidator,
 } = require("../middleware/validation");
 
-// const { isAuthorized } = require("../middleware/authValidationJWT");
+const { isAuthorizedUser } = require("../middleware/authValidationJWT");
 
 // gets all data
 routes.get("/", AuthorController.getAll);
@@ -17,7 +17,7 @@ routes.get("/:id", commonValidator.primaryKeyId, AuthorController.getOne);
 // deletes
 routes.delete(
   "/:id",
-  //   isAuthorized,
+  isAuthorizedUser,
   commonValidator.primaryKeyId,
   AuthorController.delete
 );
@@ -25,12 +25,17 @@ routes.delete(
 // add
 routes.post(
   "/",
-  //   isAuthorized,
+  isAuthorizedUser,
   authorValidator.create,
   AuthorController.add
 );
 
 // update
-routes.put("/:id", authorValidator.create, AuthorController.update);
+routes.put(
+  "/:id",
+  isAuthorizedUser,
+  authorValidator.create,
+  AuthorController.update
+);
 
 module.exports = routes;

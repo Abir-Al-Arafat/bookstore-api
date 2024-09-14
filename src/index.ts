@@ -6,6 +6,7 @@ const dotenv = require("dotenv");
 
 const BookRouter = require("./routes/BookRoutes");
 const AuthorRouter = require("./routes/AuthorRoutes");
+const AuthRouter = require("./routes/AuthRoutes");
 
 const app = express();
 
@@ -35,8 +36,10 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 
 const bookPrefix: string = "/books";
 const authorPrefix: string = "/authors";
+const usersPrefix: string = "/users";
 app.use(`${bookPrefix}`, BookRouter);
 app.use(`${authorPrefix}`, AuthorRouter);
+app.use(`${usersPrefix}`, AuthRouter);
 
 const PORT = 3000;
 
