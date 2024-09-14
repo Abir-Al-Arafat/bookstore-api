@@ -1,103 +1,130 @@
 import { Request, Response } from "express";
-
-const { validationResult } = require("express-validator");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+import { validationResult } from "express-validator";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 const { success, failure } = require("../utilities/common");
 const HTTP_STATUS = require("../constants/statusCodes");
+// import { SignupRequest, LoginRequest, User } from "../types"; // Import interfaces
 const database = require("../../src/config/database");
 
+// types.ts
+interface User {
+  id?: number;
+  name: string;
+  email: string;
+  password: string;
+}
+
+interface SignupRequest extends Request {
+  body: {
+    name: string;
+    email: string;
+    password: string;
+  };
+}
+
+interface LoginRequest extends Request {
+  body: {
+    email: string;
+    password: string;
+  };
+}
+
 class AuthController {
-  async signup(req: Request, res: Response) {
+  // Signup Method
+  async signup(req: SignupRequest, res: Response): Promise<Response> {
     try {
       const validation = validationResult(req).array();
-      console.log(validation);
       if (validation.length > 0) {
         return res
-          .status(HTTP_STATUS.OK)
-          .send(failure("Failed to add the user", validation[0].msg));
+          .status(HTTP_STATUS.UNPROCESSABLE_ENTITY)
+          .send(failure("Validation failed", validation[0].msg));
       }
+
       const { name, email, password } = req.body;
 
+      // Check if the email already exists
       const emailCheck = await database("auth_users").where({ email }).first();
       if (emailCheck) {
         return res
           .status(HTTP_STATUS.UNPROCESSABLE_ENTITY)
-          .send(failure(`User with email: ${req.body.email} already exists`));
+          .send(failure(`User with email: ${email} already exists`));
       }
 
+      // Hash the password
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      const newUser = await database("auth_users").insert({
+      // Insert new user
+      const newUser: User[] = await database("auth_users").insert({
         name,
         email,
         password: hashedPassword,
       });
 
-      // payload, secret, JWT expiration
-      // const token = jwt.sign({id: newUser._id}, process.env.JWT_SECRET, {
-      //     expiresIn: process.env.JWT_EXPIRES_IN
-      // })
-
+      // Send the response with the newly created user
       if (newUser) {
-        res
+        return res
           .status(HTTP_STATUS.OK)
-          .send(success("Account created successfully ", newUser[0]));
+          .send(success("Account created successfully", newUser[0]));
       } else {
-        res
+        return res
           .status(HTTP_STATUS.BAD_REQUEST)
-          .send(failure("Account couldnt be created"));
+          .send(failure("Account couldn't be created"));
       }
     } catch (err) {
+      console.error(err);
       return res
         .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
-        .send(`INTERNAL SERVER ERROR`);
+        .send(failure("INTERNAL SERVER ERROR"));
     }
   }
 
-  async login(req: Request, res: Response) {
+  // Login Method
+  async login(req: LoginRequest, res: Response): Promise<Response> {
     try {
       const validation = validationResult(req).array();
-      // console.log(validation);
       if (validation.length > 0) {
         return res
-          .status(HTTP_STATUS.OK)
-          .send(failure("Failed to add the user", validation[0].msg));
+          .status(HTTP_STATUS.UNPROCESSABLE_ENTITY)
+          .send(failure("Validation failed", validation[0].msg));
       }
+
       const { email, password } = req.body;
 
-      // check if email & pass exist
+      // Check if email and password are provided
       if (!email || !password) {
         return res
           .status(HTTP_STATUS.BAD_REQUEST)
-          .send(failure("please provide mail and password"));
+          .send(failure("Please provide both email and password"));
       }
 
-      // fetching the fields
-      const user = await database("auth_users").where({ email }).first();
-      console.log("user", user);
+      // Fetch user by email
+      const user: User | undefined = await database("auth_users")
+        .where({ email })
+        .first();
 
-      // when the user doesnt exist or pass dont match
       if (!user || !(await bcrypt.compare(password, user.password))) {
         return res
           .status(HTTP_STATUS.BAD_REQUEST)
-          .send(failure("wrong email or password"));
+          .send(failure("Invalid email or password"));
       }
-      // console.log(process.env.JWT_SECRET);
-      // console.log(process.env.JWT_EXPIRES_IN);
-      // token
-      const token = jwt.sign(user, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_IN,
-      });
 
-      // console.log(token);
+      // Generate JWT token
+      const token = jwt.sign(
+        { id: user.id, email: user.email },
+        process.env.JWT_SECRET!!,
+        {
+          expiresIn: process.env.JWT_EXPIRES_IN,
+        }
+      );
 
-      res.setHeader("Authorization", token);
+      // Set the token in the Authorization header
+      res.setHeader("Authorization", `Bearer ${token}`);
       return res
         .status(HTTP_STATUS.OK)
         .send(success("Logged in successfully", { user, token }));
     } catch (err) {
-      console.log(err);
+      console.error(err);
       return res
         .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
         .send(failure("Internal server error"));
@@ -105,4 +132,4 @@ class AuthController {
   }
 }
 
-module.exports = new AuthController();
+export default new AuthController();
